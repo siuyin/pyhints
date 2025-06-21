@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from typing import Union
+from fastapi import FastAPI  # type: ignore
 
 app = FastAPI()
 
@@ -10,5 +9,5 @@ def root() -> dict[str, str]:
 
 
 @app.get("/items/{id}")
-def item(id: int, q: Union[str, None] = None) -> dict[str, Union[int, str, None]]:
+def item(id: int, q: str | None = None) -> dict[str, int | str | None]:
     return {"id": id, "q": q}
