@@ -27,12 +27,21 @@ type item struct {
 
 func items(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	i := item{ID: json.Number(r.PathValue("id")), Q: r.FormValue("q")}
-	b, err := json.Marshal(&i)
+	b, err := parseItem(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
 		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	w.Write(b)
+}
+
+func parseItem(r *http.Request) ([]byte, error) {
+	i := item{ID: json.Number(r.PathValue("id")), Q: r.FormValue("q")}
+	b, err := json.Marshal(&i)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }
