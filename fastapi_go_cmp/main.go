@@ -23,8 +23,8 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 type item struct {
-	ID int    `json:"id"`
-	Q  string `json:"q"`
+	ID int     `json:"id"`
+	Q  *string `json:"q"`
 }
 
 func items(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,12 @@ func parseItem(r *http.Request) ([]byte, error) {
 		return nil, fmt.Errorf("parseItem: unable to parse id: %v", err)
 	}
 
-	i := item{ID: n, Q: r.FormValue("q")}
+	i := item{ID: n}
+	v := r.FormValue("q")
+	if v != "" {
+		i.Q = &v
+	}
+
 	b, err := json.Marshal(&i)
 	if err != nil {
 		return nil, err
