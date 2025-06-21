@@ -12,15 +12,15 @@ class CityCountry(BaseModel):
 
 ollama_model = OpenAIModel(
     model_name="PetrosStav/gemma3-tools:4b",
-    #model_name="gemma3:4b",
-    #model_name="llama3.2:3b",
+    # model_name="gemma3:4b",
+    # model_name="llama3.2:3b",
     provider=OpenAIProvider(base_url="http://imac2.h:11434/v1"),
 )
 
 agent = Agent(
     ollama_model,
     output_type=CityCountry,
-    #system_prompt="extract location information",
+    # system_prompt="extract location information",
 )
 
 if __name__ == "__main__":
