@@ -11,7 +11,7 @@ def main() -> None:
     print(i)
 
 
-def with_runner():
+def with_runner() -> None:
     with a.Runner() as r:
         i: int = 3
         print(r.run(countdown(i)))
