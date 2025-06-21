@@ -21,8 +21,8 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 type item struct {
-	ID json.Number `"json:id"`
-	Q  string      `"json:q"`
+	ID json.Number `json:"id"`
+	Q  string      `json:"q"`
 }
 
 func items(w http.ResponseWriter, r *http.Request) {
