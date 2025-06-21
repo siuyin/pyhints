@@ -2,15 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/siuyin/dflt"
 )
 
 func main() {
-	http.HandleFunc("/", root)
+	http.HandleFunc("/{$}", root)
 	http.HandleFunc("GET /items/{id}", items)
 	port := dflt.EnvString("PORT", "8080")
 	log.Fatal(http.ListenAndServe(":"+port, nil))
@@ -21,8 +23,8 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 type item struct {
-	ID json.Number `json:"id"`
-	Q  string      `json:"q"`
+	ID int    `json:"id"`
+	Q  string `json:"q"`
 }
 
 func items(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +32,7 @@ func items(w http.ResponseWriter, r *http.Request) {
 	b, err := parseItem(r)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -38,7 +40,12 @@ func items(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseItem(r *http.Request) ([]byte, error) {
-	i := item{ID: json.Number(r.PathValue("id")), Q: r.FormValue("q")}
+	n, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		return nil, fmt.Errorf("parseItem: unable to parse id: %v", err)
+	}
+
+	i := item{ID: n, Q: r.FormValue("q")}
 	b, err := json.Marshal(&i)
 	if err != nil {
 		return nil, err
